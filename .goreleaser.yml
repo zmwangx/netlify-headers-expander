@@ -1,0 +1,51 @@
+project_name: netlify-headers-expander
+before:
+  hooks:
+    - go mod download
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: darwin
+        goarch: 386
+archives:
+  - replacements:
+      386: i386
+nfpms:
+  - formats:
+      - deb
+      - rpm
+    replacements:
+      386: i386
+    bindir: /usr/bin
+    homepage: https://github.com/zmwangx/netlify-headers-expander/
+    maintainer: Zhiming Wang <i@zhimingwang.org>
+    description: >
+      expander for Netlify _headers file
+
+      netlify-headers-expander expands patterns in your Netlify _headers config
+      file so that your custom headers (especially cache-control) don't apply
+      to non-existent files.
+    license: MIT
+release:
+  draft: true
+  prerelease: auto
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
